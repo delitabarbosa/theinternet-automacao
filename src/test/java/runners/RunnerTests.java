@@ -7,9 +7,9 @@ import cucumber.api.SnippetType;
 import cucumber.api.junit.Cucumber;
 
 @RunWith(Cucumber.class)
-	@CucumberOptions(plugin = {"pretty", "html:cucumber-report",
-			   "json:cucumber-report/cucumber.json", 
-			   "io.qameta.allure.cucumberjvm.AllureCucumberJvm"},
+	@CucumberOptions(plugin = {"pretty", "html:target/cucumber-report",
+			   "json:target/cucumber-report/cucumber.json", 
+			   "io.qameta.allure.cucumber2jvm.AllureCucumber2Jvm"},
 					features = "classpath:features/",				
 	                glue = {"steps"},                
 					snippets = SnippetType.CAMELCASE, 

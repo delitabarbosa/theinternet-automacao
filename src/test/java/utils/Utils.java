@@ -1,11 +1,15 @@
 package utils;
 
+import static org.junit.Assert.assertTrue;
+
 import java.awt.Robot;
 import java.awt.event.KeyEvent;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -18,6 +22,7 @@ import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.support.PageFactory;
 
 import cucumber.api.Scenario;
+import io.qameta.allure.Allure;
 
 public class Utils {
 	public static FirefoxDriver driver;
@@ -39,8 +44,8 @@ public class Utils {
 		scenario.embed(screenshot, "image/png");
 		File imagem = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
 		try {
-			FileUtils.copyFile(imagem, (new File("./allure-reports",
-					scenario.getName() + " - " + scenario.getStatus().toUpperCase() + ".png")));
+			FileUtils.copyFile(imagem,
+					(new File("./target/allure-reports", scenario.getName() + " - " + scenario.getStatus() + ".png")));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -78,7 +83,7 @@ public class Utils {
 
 	public static void addEnvironmentAllure() {
 		try {
-			File env = new File("./allure-reports/environment.properties");
+			File env = new File("./target/allure-reports/environment.properties");
 			BufferedWriter as = new BufferedWriter(new FileWriter(env));
 			as.write("S.O = " + System.getProperty("os.name").toUpperCase());
 			as.newLine();
@@ -89,6 +94,27 @@ public class Utils {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+
+	public static void print(String evidencia) throws Exception {
+		File imagem = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
+		try {
+			Allure.addAttachment(evidencia, Files.newInputStream(Paths.get(imagem.getPath())));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	public static void esperar(int tempo) throws Exception {
+		for (int i = 0; i < tempo; i++) {
+			Thread.sleep(1000);
+		}
+	}
+
+	public static void validarMensagem(String mensagem) throws Exception {
+		System.out.println(driver.getPageSource().contains(mensagem));
+		esperar(1);
+		assertTrue(driver.getPageSource().contains(mensagem));
 	}
 
 	public static String gerarNomeAleatorio(String nome) {

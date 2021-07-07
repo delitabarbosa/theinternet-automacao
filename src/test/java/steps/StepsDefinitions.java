@@ -1,5 +1,10 @@
 package steps;
 
+import static org.junit.Assert.assertTrue;
+import static utils.Utils.driver;
+import static utils.Utils.esperar;
+import static utils.Utils.validarMensagem;
+
 import cucumber.api.java.pt.Dado;
 import cucumber.api.java.pt.Entao;
 import cucumber.api.java.pt.Quando;
@@ -11,34 +16,32 @@ public class StepsDefinitions {
 
 	@Dado("^que o usuario acessa a area de login do sistema$")
 	public void queOUsuarioAcessaAAreaDeLoginDoSistema() throws Exception {
-		pg.validarLogin();
-		pg.print("VALIDAR ÁREA DE LOGIN");
+		esperar(3);
+		System.out.println("Entrou na área de login");
+		esperar(3);
+		assertTrue(driver.getPageSource().contains("Login Page"));
 	}
 
 	@Quando("^preencher login \"([^\"]*)\" e senha \"([^\"]*)\"$")
 	public void preencherLoginESenha(String login, String senha) throws Exception {
 		pg.login(login, senha);
-		pg.print("PREENCHER LOGIN " + login.toUpperCase() + " E SENHA " + senha.toUpperCase());
 	}
 
 	@Quando("^deslogar do sistema$")
 	public void deslogarDoSistema() throws Throwable {
 		pg.logout();
-		pg.print("DESLOGAR DO SISTEMA");
 	}
 
 	@Quando("^logar e deslogar do sistema (\\d+) vezes$")
 	public void logarEDeslogarDoSistemaVezes(int arg1) throws Exception {
 		for (int i = 1; i <= arg1; i++) {
 			pg.loginLogout();
-			pg.print("LOGIN E LOGOUT " + Integer.toString(i));
+			System.out.println("LOGIN E LOGOUT " + Integer.toString(i));
 		}
 	}
 
 	@Entao("^o sistema exibe na tela a mensagem \"([^\"]*)\"$")
 	public void oSistemaExibeNaTelaAMensagem(String mensagem) throws Exception {
-		pg.validarMensagem(mensagem);
-		pg.print("VALIDAR MENSAGEM " + mensagem.toUpperCase());
+		validarMensagem(mensagem);
 	}
-
 }
